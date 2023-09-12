@@ -12,12 +12,15 @@ class ErpService:
         if check_point:
             point = check_point.first()
 
-            return [
-                Check.objects.create(
-                    printer=printer,
-                    type=printer.check_type,
-                    order=order_data
-                )
-                for printer in point.printers.all()
-            ]
-        return []
+            return {
+                check.type: check.id for check in
+                [
+                    Check.objects.create(
+                        printer=printer,
+                        type=printer.check_type,
+                        order=order_data
+                    )
+                    for printer in point.printers.all()
+                ]
+            }
+        return {}

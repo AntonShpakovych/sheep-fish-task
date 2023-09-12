@@ -14,7 +14,7 @@ class CheckCreateAPIView(views.APIView):
 
             if checks:
                 return Response(
-                    "Checks for all point printers are created",
+                    checks,
                     status=status.HTTP_201_CREATED
                 )
             return Response(
