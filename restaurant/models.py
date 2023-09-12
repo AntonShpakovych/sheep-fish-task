@@ -46,7 +46,8 @@ class Check(models.Model):
     )
     status = models.CharField(
         max_length=8,
-        choices=CHECK_STATUS_CHOICES
+        choices=CHECK_STATUS_CHOICES,
+        default="new"
     )
     pdf_file = models.FileField(
         upload_to=pdf_path,
