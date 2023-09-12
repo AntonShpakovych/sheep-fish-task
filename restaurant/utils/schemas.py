@@ -9,8 +9,9 @@ ORDER_SCHEMA = {
                 "properties": {
                     "product_id": {"type": "integer"},
                     "quantity": {"type": "integer"},
+                    "unit_price": {"type": "number"}
                 },
-                "required": ["product_id", "quantity"]
+                "required": ["product_id", "quantity", "unit_price"]
             }
         }
     },
