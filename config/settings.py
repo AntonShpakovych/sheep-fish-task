@@ -26,6 +26,7 @@ INSTALLED_APPS = [
 
     "api",
     "restaurant",
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+AUTH_USER_MODEL = "user.User"
 
 LANGUAGE_CODE = "en-us"
 
