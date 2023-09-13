@@ -10,10 +10,13 @@ from config.celery import app
 from restaurant.models import Check
 from restaurant.utils.choices import CheckStatusChoices
 
+from services.print_check_pdf_service import PrintCheckPDFService
+
 
 @app.task()
 def produce_check_pdf(check_id):
     check = Check.objects.get(id=check_id)
+
     html_string = render_to_string(
         "check.html",
         {"check": check}
@@ -39,4 +42,22 @@ def produce_check_pdf(check_id):
 
     check.pdf_file = full_path
     check.status = CheckStatusChoices.RENDERED
+    check.save()
+
+    produce_print.delay(check.id)
+
+
+@app.task()
+def produce_print(check_id):
+    check = Check.objects.select_related(
+        "printer"
+    ).get(id=check_id)
+
+    printer = PrintCheckPDFService(
+        printer=check.printer,
+        path_to_check=check.pdf_file.path
+    )
+    printer.print_pdf()
+
+    check.status = CheckStatusChoices.PRINTED
     check.save()
