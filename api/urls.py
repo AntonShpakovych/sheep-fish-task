@@ -1,17 +1,27 @@
 from django.urls import path
 
 from api.views import (
-    CheckCreateAPIView,
+    CheckCreateListAPIView,
+    CheckDetailAPIView,
     CheckToPDFApiView,
-    PrinterPrintPDFApiView
+    PrinterListView,
+    PrinterPrintPDFApiView,
+    PrinterDetailView,
+    PointListView,
+    PointDetailView
 )
 
 
 urlpatterns = [
     path(
         "checks/",
-        CheckCreateAPIView.as_view(),
-        name="checks"
+        CheckCreateListAPIView.as_view(),
+        name="check-list"
+    ),
+    path(
+        "checks/<int:check_id>/",
+        CheckDetailAPIView.as_view(),
+        name="check-detail"
     ),
     path(
         "checks/<int:check_id>/generate-pdf/",
@@ -19,9 +29,29 @@ urlpatterns = [
         name="check-generate-pdf"
     ),
     path(
+        "printers/",
+        PrinterListView.as_view(),
+        name="printer-list"
+    ),
+    path(
+        "printers/<int:pk>/",
+        PrinterDetailView.as_view(),
+        name="printer-detail"
+    ),
+    path(
         "printers/<int:printer_id>/print-pdf/",
         PrinterPrintPDFApiView.as_view(),
         name="printer-print-pdf"
+    ),
+    path(
+        "points/",
+        PointListView.as_view(),
+        name="point-list"
+    ),
+    path(
+        "points/<int:pk>/",
+        PointDetailView.as_view(),
+        name="point-detail"
     )
 ]
 
