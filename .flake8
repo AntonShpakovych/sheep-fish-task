@@ -10,3 +10,4 @@ exclude =
     venv
     tests
     **settings.py
+    **schemas.py

@@ -2,6 +2,8 @@ from rest_framework import views, status, generics
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
+from drf_spectacular.utils import extend_schema
+
 from api.utils import check_messages, printer_messages
 from api.serializers.restaurant_serializers import (
     OrderSerializer,
@@ -12,6 +14,17 @@ from api.serializers.restaurant_serializers import (
     PointListSerializer,
     PointDetailSerializer
 )
+from api.utils.schemas import (
+    CHECK_CREATE_LIST_GET_SCHEMA,
+    CHECK_DETAIL_GET_SCHEMA,
+    CHECK_TO_PDF_POST_SCHEMA,
+    PRINTER_PRINT_PDF_POST_SCHEMA,
+    PRINTER_LIST_GET_SCHEMA,
+    PRINTER_DETAIL_GET_SCHEMA,
+    POINT_LIST_GET_SCHEMA,
+    POINT_DETAIL_GET_SCHEMA,
+    CHECK_CREATE_LIST_POST_SCHEMA
+)
 
 from restaurant.models import Check, Printer, Point
 from restaurant.tasks import produce_print
@@ -21,7 +34,9 @@ from services.erp_service import ErpService
 from services.print_check_pdf_service import PrintCheckPDFService
 
 
+@extend_schema(tags=["Check"])
 class CheckCreateListAPIView(views.APIView):
+    @extend_schema(**CHECK_CREATE_LIST_GET_SCHEMA)
     def get(self, request):
         queryset = Check.objects.all()
         status_param = self.request.query_params.get("status")
@@ -39,6 +54,7 @@ class CheckCreateListAPIView(views.APIView):
             status=status.HTTP_200_OK
         )
 
+    @extend_schema(**CHECK_CREATE_LIST_POST_SCHEMA)
     def post(self, request):
         order_serializer = OrderSerializer(data=request.data)
 
@@ -60,6 +76,10 @@ class CheckCreateListAPIView(views.APIView):
         )
 
 
+@extend_schema(
+    tags=["Check"],
+    **CHECK_DETAIL_GET_SCHEMA
+)
 class CheckDetailAPIView(views.APIView):
     def get(self, request, check_id):
         check = get_object_or_404(
@@ -74,6 +94,10 @@ class CheckDetailAPIView(views.APIView):
         )
 
 
+@extend_schema(
+    tags=["Check"],
+    **CHECK_TO_PDF_POST_SCHEMA
+)
 class CheckToPDFApiView(views.APIView):
     def post(self, request, check_id):
         check = get_object_or_404(Check, id=check_id)
@@ -92,6 +116,10 @@ class CheckToPDFApiView(views.APIView):
         )
 
 
+@extend_schema(
+    tags=["Printer"],
+    **PRINTER_PRINT_PDF_POST_SCHEMA
+)
 class PrinterPrintPDFApiView(views.APIView):
     def post(self, request, printer_id):
         printer = get_object_or_404(
@@ -116,6 +144,10 @@ class PrinterPrintPDFApiView(views.APIView):
         )
 
 
+@extend_schema(
+    tags=["Printer"],
+    **PRINTER_LIST_GET_SCHEMA
+)
 class PrinterListView(generics.ListAPIView):
     serializer_class = PrinterListSerializer
 
@@ -129,6 +161,10 @@ class PrinterListView(generics.ListAPIView):
         return queryset
 
 
+@extend_schema(
+    tags=["Printer"],
+    **PRINTER_DETAIL_GET_SCHEMA
+)
 class PrinterDetailView(generics.RetrieveAPIView):
     serializer_class = PrinterDetailSerializer
     queryset = Printer.objects.select_related(
@@ -136,6 +172,10 @@ class PrinterDetailView(generics.RetrieveAPIView):
     ).prefetch_related("checks")
 
 
+@extend_schema(
+    tags=["Point"],
+    **POINT_LIST_GET_SCHEMA
+)
 class PointListView(generics.ListAPIView):
     serializer_class = PointListSerializer
 
@@ -154,6 +194,10 @@ class PointListView(generics.ListAPIView):
         return queryset
 
 
+@extend_schema(
+    tags=["Point"],
+    **POINT_DETAIL_GET_SCHEMA
+)
 class PointDetailView(generics.RetrieveAPIView):
     serializer_class = PointDetailSerializer
     queryset = Point.objects.prefetch_related("printers")
