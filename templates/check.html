@@ -8,7 +8,27 @@
   <title>Check</title>
 </head>
 <body>
-  <h1>Product Table</h1>
-  Type {{ check.type }}
+  <h1>{{ check.type|title }} check</h1>
+  <h2>Point id: {{ check.order.point_id }}</h2>
+
+  <table style="border: 1px solid black; border-collapse: collapse">
+    <tr>
+        <th>Product id</th>
+        <th>Quantity</th>
+        <th>Unit price</th>
+    </tr>
+    {% for order_item in check.order.items %}
+      <tr>
+        <td>{{ order_item.product_id }}</td>
+        <td>{{ order_item.quantity }}</td>
+        <td>{{ order_item.unit_price }}</td>
+      </tr>
+    {% endfor %}
+    <tfoot>
+        <tr>
+            <td colspan="3">Price: {{ check.full_price }}</td>
+        </tr>
+    </tfoot>
+  </table>
 </body>
 </html>

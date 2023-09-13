@@ -2,12 +2,13 @@ from rest_framework import views, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
+from api.utils import check_messages
+from api.serializers.restaurant_serializers import OrderSerializer
+
 from restaurant.models import Check
 
 from services.check_to_pdf_service import CheckToPDFService
 from services.erp import ErpService
-
-from api.serializers.restaurant_serializers import OrderSerializer
 
 
 class CheckCreateAPIView(views.APIView):
@@ -23,7 +24,7 @@ class CheckCreateAPIView(views.APIView):
                     status=status.HTTP_201_CREATED
                 )
             return Response(
-                "The specified point is invalid or has no printers",
+                check_messages.CHECK_CREATE_INVALID,
                 status=status.HTTP_400_BAD_REQUEST
             )
         return Response(
@@ -36,15 +37,15 @@ class CheckToPDFApiView(views.APIView):
     def post(self, request, check_id):
         check = get_object_or_404(Check, id=check_id)
 
-        if CheckToPDFService.is_already_exist(check=check):
+        if CheckToPDFService.is_file_already_exist(check):
             return Response(
-                f"{check.id}__{check.type}.pdf already exists",
+                check_messages.CHECK_TO_PDF_INVALID,
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        CheckToPDFService.generate_pdf(check)
+        CheckToPDFService.generate_pdf(check_id)
 
         return Response(
-            "The check to pdf generation task has been sent",
+            check_messages.CHECK_TO_PDF_SUCCESS,
             status=status.HTTP_200_OK
         )
