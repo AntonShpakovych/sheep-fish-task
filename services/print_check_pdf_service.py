@@ -11,9 +11,18 @@ class PrintCheckPDFService:
         self.printing()
 
     def download_check_pdf(self):
-        """plug for downloading: printer(self.printer) download file.pdf(check)"""
+        """plug for downloading:
+        printer(self.printer) download file.pdf(check)
+        """
         pass
 
     def printing(self):
         """plug for printing: printer(self.printer) print"""
         pass
+
+    @classmethod
+    def get_rendered_checks(cls, printer):
+        return [
+            check.id for check
+            in printer.checks.filter(status=CheckStatusChoices.RENDERED)
+        ]

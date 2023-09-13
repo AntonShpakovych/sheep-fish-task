@@ -44,20 +44,19 @@ def produce_check_pdf(check_id):
     check.status = CheckStatusChoices.RENDERED
     check.save()
 
-    produce_print.delay(check.id)
-
 
 @app.task()
-def produce_print(check_id):
-    check = Check.objects.select_related(
-        "printer"
-    ).get(id=check_id)
+def produce_print(check_ids):
+    for check_id in check_ids:
+        check = Check.objects.select_related(
+            "printer"
+        ).get(id=check_id)
 
-    printer = PrintCheckPDFService(
-        printer=check.printer,
-        path_to_check=check.pdf_file.path
-    )
-    printer.print_pdf()
+        printer = PrintCheckPDFService(
+            printer=check.printer,
+            path_to_check=check.pdf_file.path
+        )
+        printer.print_pdf()
 
-    check.status = CheckStatusChoices.PRINTED
-    check.save()
+        check.status = CheckStatusChoices.PRINTED
+        check.save()
