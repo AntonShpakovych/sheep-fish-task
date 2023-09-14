@@ -1,0 +1,30 @@
+[
+  {
+    "model": "restaurant.point",
+    "pk": 1,
+    "fields":{
+      "name": "Point 1",
+      "address": "Address 1"
+    }
+  },
+  {
+    "model": "restaurant.printer",
+    "pk": 1,
+    "fields": {
+      "name": "Printer kitchen",
+      "api_key": "f99a71b2-8dcc-4f1a-88b7-58144ea38ce2",
+      "check_type": "kitchen",
+      "point": 1
+    }
+  },
+  {
+    "model": "restaurant.printer",
+    "pk": 2,
+    "fields": {
+      "name": "Printer client",
+      "api_key": "479f3dbe-d4f2-4603-815e-8c220e61b254",
+      "check_type": "client",
+      "point": 1
+    }
+  }
+]
