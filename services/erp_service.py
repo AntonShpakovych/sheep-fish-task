@@ -1,9 +1,28 @@
+from typing import Dict, Any
+
 from restaurant.models import Check, Point
 
 
 class ErpService:
+    """
+    Service for creating check
+    """
     @classmethod
-    def create_check(cls, order):
+    def create_check(cls, order: Dict[str, Any]) -> Dict[str, int]:
+        """
+        Create checks for an order and
+        return a dictionary of created check IDs.
+
+        This method takes an order dictionary and creates checks
+        for each printer associated with the order's point.
+        It returns a dictionary where keys are check types,
+        and values are check ID.
+
+        :param order: The order data containing 'point_id' and other relevant information. # noqa: 501
+        :type order: dict
+        :return: A dictionary of created check IDs grouped by check type.
+        :rtype: dict
+        """
         order_data = order["order"]
         order_point_id = order_data["point_id"]
 

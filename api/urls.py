@@ -19,12 +19,12 @@ urlpatterns = [
         name="check-list"
     ),
     path(
-        "checks/<int:check_id>/",
+        "checks/<int:pk>/",
         CheckDetailAPIView.as_view(),
         name="check-detail"
     ),
     path(
-        "checks/<int:check_id>/generate-pdf/",
+        "checks/<int:pk>/generate-pdf/",
         CheckToPDFApiView.as_view(),
         name="check-generate-pdf"
     ),
@@ -39,7 +39,7 @@ urlpatterns = [
         name="printer-detail"
     ),
     path(
-        "printers/<int:printer_id>/print-pdf/",
+        "printers/<int:pk>/print-pdf/",
         PrinterPrintPDFApiView.as_view(),
         name="printer-print-pdf"
     ),
